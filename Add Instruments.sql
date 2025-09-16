@@ -1,0 +1,15 @@
+﻿INSERT INTO Instruments (Name, Family)
+VALUES ('Trumpet', 'Brass'),
+       ('Flöjt', 'Träblås'),
+       ('Trombon', 'Brass'),
+       ('Violin', 'Stråk'),
+       ('Trummor', 'Slagverk'),
+       ('Klarinett', 'Träblås'),
+       ('Saxofon', 'Träblås'),
+       ('Cello', 'Stråk'),
+       ('Oboe', 'Träblås'),
+       ('Tuba', 'Brass'),
+       ('Xylofon', 'Slagverk'),
+       ('Marimba', 'Slagverk'),
+       ('Fagott', 'Träblås'),
+       ('Horn', 'Brass');
