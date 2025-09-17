@@ -19,3 +19,5 @@ BEGIN
     END CATCH
 END
 GO
+
+usp_PracticeSession_Delete 1
