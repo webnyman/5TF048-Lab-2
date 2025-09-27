@@ -6,7 +6,7 @@
     Minutes INT NOT NULL,                      -- Övningstid
     Intensity TINYINT NOT NULL,                -- 1–5
     Focus NVARCHAR(200) NOT NULL,              -- Vad man övade på
-    Comment NVARCHAR(MAX) NULL,                -- Valfritt fält
+    Comment NVARCHAR(MAX) NULL,                -- Kommentarsfält
 
     CONSTRAINT PK_PracticeSessions PRIMARY KEY (SessionId),
 

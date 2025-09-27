@@ -34,9 +34,9 @@ END;
 DECLARE @NewId INT;
 
 EXEC dbo.usp_PracticeSession_Create
-    @UserId = '8F534638-6E25-4310-81CA-AB284F796E59',
+    @UserId = '13392206-460D-4FBA-BB5C-88210BC1437A',
     @InstrumentId = 1,
-    @PracticeDate = '2025-09-17',
+    @PracticeDate = '2025-09-19',
     @Minutes = 30,
     @Intensity = 4,
     @Focus = N'Skalor',

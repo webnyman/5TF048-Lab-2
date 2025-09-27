@@ -4,4 +4,4 @@ SELECT TOP 1 InstrumentId FROM dbo.Instruments;
 
 -- Lägg till en övningssession
 INSERT INTO dbo.PracticeSessions (UserId, InstrumentId, PracticeDate, Minutes, Intensity, Focus, Comment)
-VALUES ('8F534638-6E25-4310-81CA-AB284F796E59', 1, '2025-09-17', 45, 4, 'Teknik', 'Bra Fokus');
+VALUES ('22222222-2222-2222-2222-222222222222', 1, '2025-09-17', 45, 4, 'Teknik', 'Bra Fokus');
