@@ -5,8 +5,7 @@
     @Minutes INT,
     @Intensity TINYINT,
     @Focus NVARCHAR(200),
-    @Comment NVARCHAR(MAX) = NULL,
-    @NewSessionId INT OUTPUT
+    @Comment NVARCHAR(MAX) = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -20,7 +19,7 @@ BEGIN
         VALUES
             (@UserId, @InstrumentId, @PracticeDate, @Minutes, @Intensity, @Focus, @Comment);
 
-        SET @NewSessionId = SCOPE_IDENTITY();
+        SELECT SCOPE_IDENTITY() AS NewSessionId;
 
         COMMIT;
     END TRY

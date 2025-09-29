@@ -1,5 +1,6 @@
 ﻿CREATE OR ALTER PROCEDURE dbo.usp_PracticeSession_Update
   @SessionId     INT,
+  @UserId        UNIQUEIDENTIFIER,
   @InstrumentId  INT,
   @PracticeDate  DATE,
   @Minutes       INT,
@@ -21,15 +22,21 @@ BEGIN
           Intensity    = @Intensity,
           Focus        = @Focus,
           Comment      = @Comment
-      WHERE SessionId  = @SessionId;
+      WHERE SessionId = @SessionId
+        AND UserId    = @UserId;
 
-      IF @@ROWCOUNT = 0
+      DECLARE @rc INT = @@ROWCOUNT;
+
+      IF @rc = 0
       BEGIN
-        -- Hittade inte posten
-        ;THROW 50000, 'PracticeSession not found.', 1;
+        -- Ingen rad uppdaterades: fel SessionId eller fel UserId (”inte ägare”)
+        ;THROW 50000, 'PracticeSession not found or not owned by user.', 1;
       END
 
     COMMIT;
+
+    -- retur till C#: ExecuteScalar -> @rc
+    SELECT @rc AS RowsAffected;
   END TRY
   BEGIN CATCH
     IF XACT_STATE() <> 0 ROLLBACK;
@@ -37,9 +44,3 @@ BEGIN
   END CATCH
 END
 GO
---- Test av SP
-EXEC dbo.usp_PracticeSession_Update
-  @SessionId=3, @InstrumentId=2, @PracticeDate='2025-09-17',
-  @Minutes=50, @Intensity=4, @Focus=N'Etyder', @Comment=N'Uppdaterad';
-
-SELECT * FROM dbo.PracticeSessions WHERE SessionId=3;
