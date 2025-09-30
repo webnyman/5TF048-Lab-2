@@ -26,11 +26,24 @@ CREATE OR ALTER PROCEDURE dbo.usp_Instruments_Create
   @Family NVARCHAR(50)
 AS
 BEGIN
-  SET NOCOUNT ON;
-  INSERT INTO dbo.Instruments(Name, Family) VALUES(@Name, @Family);
-  SELECT CAST(SCOPE_IDENTITY() AS int) AS NewInstrumentId;
+  SET NOCOUNT ON; SET XACT_ABORT ON;
+  BEGIN TRY
+    INSERT INTO dbo.Instruments(Name, Family)
+    VALUES(@Name, @Family);
+
+    SELECT CAST(SCOPE_IDENTITY() AS NewInstrumentId
+  END TRY
+  BEGIN CATCH
+    IF ERROR_NUMBER() = 2627  -- Unique constraint violation
+    BEGIN
+      ;THROW 50030, 'Instrument already exists.', 1;
+    END
+    ELSE
+      THROW;
+  END CATCH
 END
 GO
+
 
 CREATE OR ALTER PROCEDURE dbo.usp_Instruments_Update
   @InstrumentId INT,
@@ -41,23 +54,21 @@ BEGIN
   SET NOCOUNT ON; SET XACT_ABORT ON;
 
   BEGIN TRY
-    BEGIN TRAN;
-
     UPDATE dbo.Instruments
-    SET Name = @Name, Family = @Family
+    SET Name = @Name,
+        Family = @Family
     WHERE InstrumentId = @InstrumentId;
 
     DECLARE @rc INT = @@ROWCOUNT;
 
     IF @rc = 0
-      THROW 50020, 'Instrument not found.', 1;
-
-    COMMIT;
+      THROW 50040, 'Instrument not found.', 1;
 
     SELECT @rc AS RowsAffected;
   END TRY
   BEGIN CATCH
-    IF XACT_STATE() <> 0 ROLLBACK;
+    IF ERROR_NUMBER() IN (2627,2601)
+      THROW 50041, 'Instrument name must be unique.', 1;
     THROW;
   END CATCH
 END
@@ -71,22 +82,20 @@ BEGIN
   SET NOCOUNT ON; SET XACT_ABORT ON;
 
   BEGIN TRY
-    BEGIN TRAN;
-
     DELETE FROM dbo.Instruments
     WHERE InstrumentId = @InstrumentId;
 
     DECLARE @rc INT = @@ROWCOUNT;
 
     IF @rc = 0
-      THROW 50021, 'Instrument not found.', 1;
-
-    COMMIT;
+      THROW 50042, 'Instrument not found.', 1;
 
     SELECT @rc AS RowsAffected;
   END TRY
   BEGIN CATCH
-    IF XACT_STATE() <> 0 ROLLBACK;
+    -- FK-krock (instrumentet används i PracticeSessions)
+    IF ERROR_NUMBER() IN (547)
+      THROW 50043, 'Instrument is referenced by practice sessions.', 1;
     THROW;
   END CATCH
 END
