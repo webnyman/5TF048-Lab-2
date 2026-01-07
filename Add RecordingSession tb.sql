@@ -1,0 +1,9 @@
+﻿CREATE TABLE RecordingSession (
+    RecordingSessionId INT IDENTITY(1,1) PRIMARY KEY,
+    UserId INT NOT NULL,
+    StartUtc DATETIME2 NOT NULL,
+    EndUtc DATETIME2 NULL,
+    Status NVARCHAR(20) NOT NULL,
+    DeviceId NVARCHAR(50) NULL,
+    CreatedUtc DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()
+);
